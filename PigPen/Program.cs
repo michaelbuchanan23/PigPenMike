@@ -7,20 +7,23 @@ using System.Threading.Tasks;
 namespace PigPen {
 	class Program {
 
-		Random rnd = new Random();
-		List<Player> playerscores = new List<Player>();
+		Random rnd = new Random();							//making a new instance class of random with variable 
+		List<Player> playerscores = new List<Player>();     //placed here due to scope
 
 		int RollDie() {
 			return rnd.Next(1, 7);
 		}
 
 		int PlayerCount() {
-			//collecting number of players and putting in NumbOfPlayers
-			Console.Write("How many players are there? ");
-			//add if statement here similar to asking people if they want to quit y or n to make sure someone can't blow up the program//
-			int NumbOfPlayers = Int32.Parse(Console.ReadLine());
-		
-			//add a player for each number of players -- may also want to add something here to get the player's name
+			int NumbOfPlayers = 0;
+			bool isInt = false;
+			while (isInt == false) {
+				Console.Write("How many players are there? ");
+				isInt = Int32.TryParse(Console.ReadLine(), out NumbOfPlayers);
+				if (isInt == false) {
+					Console.WriteLine("That is not an int... try again.");
+				}
+			}
 			for (int idx = 1; idx <= NumbOfPlayers; idx++) {
 				Player player = new Player(idx,0);
 				playerscores.Add(player);
@@ -35,7 +38,6 @@ namespace PigPen {
 			Console.WriteLine("-----Round 1-----");
 			Console.WriteLine("-----------------");
 
-			//for loop that runs once for each player
 			for (int idx = 1; idx <= NumbofPlayers; idx++) {
 				Console.WriteLine("");
 				Console.WriteLine($"-----Player {idx} Turn-----");
@@ -46,9 +48,24 @@ namespace PigPen {
 					if (die != 1) {
 						Score += die;
 						Console.WriteLine($"You rolled a -{die}- and your current score this round is -{Score}-");
-						Console.Write("Would you like to roll again? ");
+						Console.Write("Would you like to roll again? (Y/N) ");						
 						string answer = Console.ReadLine();
-						answer = answer.ToUpper(); //converts the answer to upper case
+						answer = answer.ToUpper();
+						bool ValidResponse = false;
+						while (ValidResponse != true) {
+							if (answer == "Y") {
+								EndTurn = false;
+								ValidResponse = true; 
+							} else if (answer == "N") {
+								EndTurn = true;
+								ValidResponse = true;
+							} else {
+								Console.WriteLine("Select only Y or N");
+								answer = Console.ReadLine().ToUpper();
+								
+							}
+
+						}
 						EndTurn = answer.StartsWith("N"); //start with function which determines if answer variable starts with a Y
 					} else {
 						EndTurn = true;
@@ -234,14 +251,17 @@ namespace PigPen {
 				//PRINT FINAL SCORE & CONGRATULATE THE WINNER
 				for (int idx = 1; idx <= NumbOfPlayers; idx++) {
 					Console.WriteLine($"Player {idx} Final Score: {playerscores[idx - 1].PlayerScore}");
+				}	
+				
+				int winningscore = playerscores.Max(p => p.PlayerScore);  
+				foreach(Player player in playerscores) {
+					if (player.PlayerScore == winningscore) {
+						Console.WriteLine($"Winner winner chicken dinner {player.PlayerScore}");
+					}
 				}
-
-				//add logic statement (i.e., if-then) to determine winner and print the player number and score//
-				int winner = playerscores.Max(p => p.PlayerScore);
 				Console.WriteLine("------------------------------");
-				Console.WriteLine($"Winner had a score of {winner}...Congrats!");
+				Console.WriteLine($"Winner had a score of {winningscore}...Congrats!");
 				Console.WriteLine("------------------------------");
-
 
 				//asking user if they want to play again
 				Console.Write("Do you want to play again? ");
