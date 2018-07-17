@@ -21,7 +21,7 @@ namespace PigPen {
 				Console.Write("How many players are there? ");
 				isInt = Int32.TryParse(Console.ReadLine(), out NumbOfPlayers);
 				if (isInt == false) {
-					Console.WriteLine("That is not an int... try again.");
+					Console.WriteLine("That is not a number...try again.");
 				}
 			}
 			for (int idx = 1; idx <= NumbOfPlayers; idx++) {
@@ -62,9 +62,7 @@ namespace PigPen {
 							} else {
 								Console.WriteLine("Select only Y or N");
 								answer = Console.ReadLine().ToUpper();
-								
 							}
-
 						}
 						EndTurn = answer.StartsWith("N"); //start with function which determines if answer variable starts with a Y
 					} else {
@@ -74,7 +72,7 @@ namespace PigPen {
 					}
 				}
 
-				//NEED TO TALLY UP THE SCORE HERE FOR EACH PLAYER ITERATION FOR ROUND 1 via ".add"//
+				//Tally score for each player 
 				playerscores[idx - 1].PlayerScore = Score;
 
 				//output player score for round
@@ -253,15 +251,12 @@ namespace PigPen {
 					Console.WriteLine($"Player {idx} Final Score: {playerscores[idx - 1].PlayerScore}");
 				}	
 				
-				int winningscore = playerscores.Max(p => p.PlayerScore);  
+				int winningscore = playerscores.Max(p => p.PlayerScore);
 				foreach(Player player in playerscores) {
 					if (player.PlayerScore == winningscore) {
-						Console.WriteLine($"Winner winner chicken dinner {player.PlayerScore}");
+						Console.WriteLine($"Winner is Player {player.PlayerNumber} with a score of {player.PlayerScore}");
 					}
 				}
-				Console.WriteLine("------------------------------");
-				Console.WriteLine($"Winner had a score of {winningscore}...Congrats!");
-				Console.WriteLine("------------------------------");
 
 				//asking user if they want to play again
 				Console.Write("Do you want to play again? ");
